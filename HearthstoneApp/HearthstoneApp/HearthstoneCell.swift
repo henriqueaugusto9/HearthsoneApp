@@ -1,7 +1,7 @@
 import UIKit
 
 protocol HearthstoneCellProtocol {
-    var image: UIImage { get }
+    var imageURL: String { get }
     var name: String { get }
     var playerClass: String { get }
 }
@@ -12,7 +12,7 @@ final class HearthstoneCell: UITableViewCell, ViewConfiguration {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 12.5
-        imageView.image = config?.image
+        imageView.image = UIImage(named: "default-icon")
         return imageView
     }()
     
@@ -33,13 +33,14 @@ final class HearthstoneCell: UITableViewCell, ViewConfiguration {
     }()
     
     private var config: HearthstoneCellProtocol?
+    
     func config(config: HearthstoneCellProtocol) {
         self.config = config
+        self.imageContainer.setImageFrom(stringUrl: config.imageURL)
         setupViews()
     }
     
     func configViews() {
-        translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .white
     }
     
@@ -49,7 +50,6 @@ final class HearthstoneCell: UITableViewCell, ViewConfiguration {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            imageContainer.heightAnchor.constraint(equalToConstant: 50),
             imageContainer.widthAnchor.constraint(equalToConstant: 70),
             
             imageContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
@@ -62,7 +62,6 @@ final class HearthstoneCell: UITableViewCell, ViewConfiguration {
             
             labelPlayerClass.topAnchor.constraint(equalTo: labelName.bottomAnchor, constant: 4),
             labelPlayerClass.leadingAnchor.constraint(equalTo: imageContainer.trailingAnchor, constant: 8),
-            labelPlayerClass.bottomAnchor.constraint(equalTo: imageContainer.bottomAnchor, constant: -4),
             labelPlayerClass.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4)
         ])
     }

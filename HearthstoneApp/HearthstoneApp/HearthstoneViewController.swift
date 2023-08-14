@@ -5,9 +5,9 @@ protocol HearthstoneViewControllerProtocol: AnyObject {
 }
 
 final class HearthstoneViewController: UIViewController, ViewConfiguration {
-    
     private lazy var tableView: UITableView = {
-        let tableView = TableViewFactory.build(with: self)
+        let tableView = UITableView(frame: .infinite, style: .plain)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(HearthstoneCell.self, forCellReuseIdentifier: HearthstoneCell.identifier)
         
         tableView.dataSource = self
@@ -20,7 +20,14 @@ final class HearthstoneViewController: UIViewController, ViewConfiguration {
     
     var interactor: HearthstoneInteractorProtocol?
     private var cells: [HearthstoneCellProtocol] = []
-
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        setupViews()
+    }
+    
+    required init?(coder: NSCoder) { nil }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         interactor?.getItems()
@@ -28,7 +35,7 @@ final class HearthstoneViewController: UIViewController, ViewConfiguration {
     
     //MARK: - ViewConfiguration
     func configViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .white   
     }
     
     func buildViews() {
@@ -37,10 +44,10 @@ final class HearthstoneViewController: UIViewController, ViewConfiguration {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
@@ -60,7 +67,7 @@ extension HearthstoneViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        UITableView.automaticDimension
+        70
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -71,10 +78,12 @@ extension HearthstoneViewController: UITableViewDataSource, UITableViewDelegate 
     }
 }
 
-
 extension HearthstoneViewController: HearthstoneViewControllerProtocol {
     func setupItems(cells: [HearthstoneCellProtocol]) {
         self.cells = cells
-        setupViews()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }

@@ -1,10 +1,3 @@
-//
-//  HearthstoneDetailsFactory.swift
-//  HearthstoneApp
-//
-//  Created by henrique augusto on 13/08/23.
-//
-
 import Foundation
 
 enum HearthstoneDetailsFactory {

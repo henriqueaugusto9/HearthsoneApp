@@ -9,28 +9,26 @@ final class HearthstoneInteractor: HearthstoneInteractorProtocol {
     
     init(presenter: HearthstonePresenterProtocol) {
         self.presenter = presenter
-        
-        getItems()
     }
     
     func getItems() {
         let apiClient = ApiClient(urlSession: URLSession.shared)
         let request = ListRequest()
-        apiClient.fetchData(request: request) { (result: Result<Hearthstone, Error>) in
+        apiClient.fetchData(request: request) { [presenter] (result: Result<[HearthstoneElement], Error>) in
             switch result {
-            case .success(let success):
-                print(success)
+            case .success(let response):
+                let items = response.filter { $0.img != nil }.map { item in
+                    AshesOfOutlandData.map(from: item)
+                }
+                presenter.setupItems(items: items)
             case .failure(let failure):
                 print(failure)
             }
         }
-
-        
-        presenter.setupItems()
     }
     
     struct ListRequest: ApiRequest {
-        var urlString: String = "https://omgvamp-hearthstone-v1.p.rapidapi.com/cards"
+        var urlString: String = "https://omgvamp-hearthstone-v1.p.rapidapi.com/cards/sets/Ashes%20of%20Outland"
         var method: ApiMethod = .get
         var headers: [String : Any] =  [
             "X-RapidAPI-Key": "d6bce19e18msh68ec4bbf70ce21ep11662bjsn2ea1268234fc",
@@ -38,24 +36,3 @@ final class HearthstoneInteractor: HearthstoneInteractorProtocol {
         ]
     }
 }
-
-
-
-//
-//        let request = NSMutableURLRequest(url: NSURL(string: )! as URL,
-//                                                cachePolicy: .useProtocolCachePolicy,
-//                                            timeoutInterval: 10.0)
-//        request.httpMethod = "GET"
-//        request.allHTTPHeaderFields = headers
-//
-//        let session = URLSession.shared
-//        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
-//            if (error != nil) {
-//                print(error as Any)
-//            } else {
-//                let httpResponse = response as? HTTPURLResponse
-//                print(httpResponse)
-//            }
-//        })
-//
-//        dataTask.resume()
