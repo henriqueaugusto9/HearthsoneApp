@@ -1,7 +1,7 @@
 import UIKit
 
 protocol HearthstoneCoordinatorProtocol {
-    func goToDetails()
+    func goToDetails(data: [String: String])
 }
 
 final class HearthstoneCoordinator: HearthstoneCoordinatorProtocol {
@@ -11,8 +11,8 @@ final class HearthstoneCoordinator: HearthstoneCoordinatorProtocol {
         self.rootViewController = rootViewController
     }
 
-    func goToDetails() {
-        let details = HearthstoneDetailsFactory.build()
+    func goToDetails(data: [String: String]) {
+        let details = HearthstoneDetailsViewController(items: data)
         rootViewController.present(details, animated: true)
     }
 }

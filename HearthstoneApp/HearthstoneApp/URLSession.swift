@@ -21,11 +21,11 @@ enum ApiError: Error {
     case parse
 }
 
-protocol ApiClientProtocol {
+protocol ApiClientProtocol: AnyObject {
     func fetchData<T: Decodable>(request: ApiRequest, completion: @escaping (Result<T, Error>) -> Void)
 }
 
-protocol URLSessionProtocol {
+protocol URLSessionProtocol: AnyObject {
     func fetchData(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void)
 }
 

@@ -2,6 +2,7 @@ import UIKit
 
 protocol HearthstoneViewControllerProtocol: AnyObject {
     func setupItems(cells: [HearthstoneCellProtocol])
+    func showDetails(data: AshesOfOutlandData)
 }
 
 final class HearthstoneViewController: UIViewController, ViewConfiguration {
@@ -71,10 +72,8 @@ extension HearthstoneViewController: UITableViewDataSource, UITableViewDelegate 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = self.cells[indexPath.item]
-        
-        let coordinator = HearthstoneCoordinator(with: self)
-        coordinator.goToDetails()
+        tableView.deselectRow(at: indexPath, animated: true)
+        interactor?.goToDetails(index: indexPath.row)
     }
 }
 
@@ -85,5 +84,10 @@ extension HearthstoneViewController: HearthstoneViewControllerProtocol {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
+    }
+    
+    func showDetails(data: AshesOfOutlandData) {
+        let coordinator = HearthstoneCoordinator(with: self)
+        coordinator.goToDetails(data: HearthstoneDetailsItemFactory.build(data: data))
     }
 }

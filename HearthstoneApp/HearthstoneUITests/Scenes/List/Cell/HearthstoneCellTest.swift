@@ -5,8 +5,7 @@ import XCTest
 
 final class HearthstoneCellTest: XCTestCase {
     func test_WhenCellStarts_ThenSuccess_ShouldDisplayCorrectLayout() {
-        guard let image = UIImage(named: "default-icon") else { return }
-        let config = Config(image: image, name: "Player Name", playerClass: "PlayerClass")
+        let config = Config(imageURL: "", name: "Player Name", playerClass: "PlayerClass")
         
         let sut = HearthstoneCell()
         sut.config(config: config)
@@ -17,7 +16,7 @@ final class HearthstoneCellTest: XCTestCase {
     }
     
     private struct Config: HearthstoneCellProtocol {
-        var image: UIImage
+        var imageURL: String
         var name: String
         var playerClass: String
     }

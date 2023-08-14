@@ -2,6 +2,7 @@ import UIKit.UIImage
 
 protocol HearthstonePresenterProtocol {
     func setupItems(items: [AshesOfOutlandData])
+    func goToDetails(item: AshesOfOutlandData)
 }
 
 final class HearthstonePresenter: HearthstonePresenterProtocol {
@@ -18,10 +19,14 @@ final class HearthstonePresenter: HearthstonePresenterProtocol {
         
         view.setupItems(cells: views)
     }
-}
-
-private struct Config: HearthstoneCellProtocol {
-    var imageURL: String
-    var name: String
-    var playerClass: String
+    
+    func goToDetails(item: AshesOfOutlandData) {
+        view.showDetails(data: item)
+    }
+    
+    private struct Config: HearthstoneCellProtocol {
+        var imageURL: String
+        var name: String
+        var playerClass: String
+    }
 }

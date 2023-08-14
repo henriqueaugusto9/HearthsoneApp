@@ -2,24 +2,29 @@ import Foundation
 
 protocol HearthstoneInteractorProtocol {
     func getItems()
+    func goToDetails(index: Int)
 }
 
 final class HearthstoneInteractor: HearthstoneInteractorProtocol {
     private let presenter: HearthstonePresenterProtocol
+    private var items: [AshesOfOutlandData]?
+    private var apiClient: ApiClientProtocol
+    private var request: ApiRequest
     
-    init(presenter: HearthstonePresenterProtocol) {
+    init(presenter: HearthstonePresenterProtocol, apiClient: ApiClientProtocol, request: ApiRequest) {
         self.presenter = presenter
+        self.apiClient = apiClient
+        self.request = request
     }
     
     func getItems() {
-        let apiClient = ApiClient(urlSession: URLSession.shared)
-        let request = ListRequest()
         apiClient.fetchData(request: request) { [presenter] (result: Result<[HearthstoneElement], Error>) in
             switch result {
             case .success(let response):
                 let items = response.filter { $0.img != nil }.map { item in
                     AshesOfOutlandData.map(from: item)
                 }
+                self.items = items
                 presenter.setupItems(items: items)
             case .failure(let failure):
                 print(failure)
@@ -27,12 +32,8 @@ final class HearthstoneInteractor: HearthstoneInteractorProtocol {
         }
     }
     
-    struct ListRequest: ApiRequest {
-        var urlString: String = "https://omgvamp-hearthstone-v1.p.rapidapi.com/cards/sets/Ashes%20of%20Outland"
-        var method: ApiMethod = .get
-        var headers: [String : Any] =  [
-            "X-RapidAPI-Key": "d6bce19e18msh68ec4bbf70ce21ep11662bjsn2ea1268234fc",
-            "X-RapidAPI-Host": "omgvamp-hearthstone-v1.p.rapidapi.com"
-        ]
+    func goToDetails(index: Int) {
+        guard let item = items?[index] else { return }
+        presenter.goToDetails(item: item)
     }
 }

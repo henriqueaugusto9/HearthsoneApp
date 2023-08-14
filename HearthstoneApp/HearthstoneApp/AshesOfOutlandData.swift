@@ -14,7 +14,11 @@ struct AshesOfOutlandData {
     let playerClass: String
     let img: String
     
-    init(name: String, cardSet: String, type: String, rarity: String, cost: Int, faction: String, attack: Int, flavor: String, health: Int, text: String, playerClass: String, img: String) {
+    init(name: String, cardSet: String, type: String,
+         rarity: String, cost: Int, faction: String,
+         attack: Int, flavor: String, health: Int,
+         text: String, playerClass: String, img: String) {
+        
         self.name = name
         self.cardSet = cardSet
         self.type = type
